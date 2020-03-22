@@ -11,6 +11,8 @@ public interface IMyService
 
     public void startProcess(String processKey);
 
+    public void deleteProcessInstance(String processId,String deleteReason);
+
     public List<Task> getTasks(String assignee);
 
 
