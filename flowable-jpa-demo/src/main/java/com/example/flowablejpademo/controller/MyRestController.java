@@ -1,6 +1,6 @@
-package com.example.flowablemysqldemo.controller;
+package com.example.flowablejpademo.controller;
 
-import com.example.flowablemysqldemo.service.IMyService;
+import com.example.flowablejpademo.service.IMyService;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +30,14 @@ public class MyRestController {
 
     @PostMapping("/deploy")
     public String deployBPMN(){
-        return myService.deploymentBPMN20("one-task-process.bpmn20.xml");
+        return myService.deploymentBpmn20("one-task-process.bpmn20.xml");
     }
 
     @PostMapping("/process")
-    public void startProcessInstance(){
-        myService.startProcess("oneTaskProcess");
+    public void startProcessInstance(String assignee){
+        myService.startProcess("oneTaskProcess",assignee);
     }
+
 
     /**
      * TODO 文档暂未提供,但方法提供
