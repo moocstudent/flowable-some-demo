@@ -76,6 +76,7 @@ public class MyServiceImpl implements IMyService{
     @Override
     public void startProcess(String processKey,String assignee) {
         Person person = personRepository.findByUsername(assignee);
+        System.out.println("get person:"+person.toString());
         HashMap<String, Object> variables = new HashMap<>();
         variables.put("person",person);
         runtimeService.startProcessInstanceByKey(processKey,variables);
@@ -106,11 +107,8 @@ public class MyServiceImpl implements IMyService{
     @Override
     public void createDemoUsers(){
         if(personRepository.findAll().size()==0){
-
-            Person save1 = personRepository.save(new Person("testZhang", "Zhang", "Fei", new Date()));
-            System.out.println("person1:"+save1.getId());
-            Person save2 = personRepository.save(new Person("testGao", "Gao", "Qiu", new Date()));
-            System.out.println("person2:"+save2.getId());
+            personRepository.save(new Person("jbarrez", "Joram", "Barrez", new Date()));
+            personRepository.save(new Person("trademakers", "Tijs", "Rademakers", new Date()));
         }
 
     }
