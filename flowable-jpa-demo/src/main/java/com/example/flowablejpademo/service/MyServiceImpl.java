@@ -71,7 +71,7 @@ public class MyServiceImpl implements IMyService{
     }
 
     /**
-     * 开始流程实例
+     * 开始流程实例 传入流程参数key value
      */
     @Override
     public void startProcess(String processKey,String assignee) {

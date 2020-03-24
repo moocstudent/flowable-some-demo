@@ -15,12 +15,12 @@ import java.util.List;
  * 比文档多一个deploy方法(如果部署不同的bpmn2.0文件请更换方法内名称或配置到properties Value读取)
  *
  * 测试查看启动boot main
- * 1.获取受理人名kermit的task列表
- * curl http://localhost:8080/tasks?assignee=kermit
- * 2.开始一个流程
- * curl -X POST  http://localhost:8080/process
- * 3.再次查看
- * curl http://localhost:8080/tasks?assignee=kermit
+ * 1.部署流程实例
+ * curl http://localhost:8080/deploy -X POST
+ * 2.开始一个流程.指定受理人参数
+ * curl -X POST  http://localhost:8080/process?assignee=jbarrez
+ * 3.查看person.id为1的人员的tasks
+ * curl http://localhost:8080/tasks?assignee=1
  *
  */
 @RestController
