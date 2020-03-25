@@ -1,8 +1,10 @@
-package com.example.flowablejpademo.service;
+package com.example.flowablejpademo.service.impl;
 
+import com.example.flowablejpademo.bean.MyProcess;
 import com.example.flowablejpademo.bean.Person;
-import com.example.flowablejpademo.dao.PersonRepository;
-import org.apache.commons.lang3.time.DateUtils;
+import com.example.flowablejpademo.repository.MyProcessRepository;
+import com.example.flowablejpademo.repository.PersonRepository;
+import com.example.flowablejpademo.service.IMyService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
@@ -13,18 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author ukyo
  */
 @Service
 @Transactional
-public class MyServiceImpl implements IMyService{
+public class MyServiceImpl implements IMyService {
 
     /**
      *     操作流程运行时
@@ -47,6 +47,9 @@ public class MyServiceImpl implements IMyService{
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private MyProcessRepository myProcessRepository;
+
     /**
      * 部署xml
      * @param xmlFileName
@@ -67,6 +70,8 @@ public class MyServiceImpl implements IMyService{
         System.out.println("Process Key is:"+processKey);
         String processId = processDefinition.getId();
         System.out.println("Process Id is:"+processId);
+        MyProcess mp = new MyProcess(processId,processName,processKey);
+        myProcessRepository.save(mp);
         return processKey;
     }
 
@@ -105,12 +110,10 @@ public class MyServiceImpl implements IMyService{
     }
 
     @Override
-    public void createDemoUsers(){
-        if(personRepository.findAll().size()==0){
-            personRepository.save(new Person("jbarrez", "Joram", "Barrez", new Date()));
-            personRepository.save(new Person("trademakers", "Tijs", "Rademakers", new Date()));
-        }
-
+    public List<MyProcess> getAllDeployProcess(){
+        List<MyProcess> allByCreateTimeDesc = myProcessRepository.findAllByOrderByCreateTimeDesc();
+        allByCreateTimeDesc.forEach(c-> System.out.println("myProcess in db:"+c));
+        return allByCreateTimeDesc;
     }
 
 }

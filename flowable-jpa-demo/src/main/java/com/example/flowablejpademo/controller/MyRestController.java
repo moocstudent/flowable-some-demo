@@ -1,5 +1,6 @@
 package com.example.flowablejpademo.controller;
 
+import com.example.flowablejpademo.bean.MyProcess;
 import com.example.flowablejpademo.bean.TaskRepresentation;
 import com.example.flowablejpademo.service.IMyService;
 import org.flowable.task.api.Task;
@@ -16,12 +17,15 @@ import java.util.List;
  *
  * 测试查看启动boot main
  * 1.部署流程实例
- * curl http://localhost:8080/deploy -X POST
+ * curl http://localhost:9090/deploy?bpmnName=one-task-process -X POST
  * 2.开始一个流程.指定受理人参数
- * curl -X POST  http://localhost:8080/process?assignee=jbarrez
+ * curl -X POST  http://localhost:9090/process?assignee=jbarrez
  * 3.查看person.id为1的人员的tasks
- * curl http://localhost:8080/tasks?assignee=1
- *
+ * curl http://localhost:9090/tasks?assignee=1
+ * 4.部署另一个实例
+ * curl http://localhost:9090/deploy?bpmnName=test -X POST
+ * 5.开始另一个流程 admin
+ * curl -X POST  http://localhost:9090/process?assignee=admin
  */
 @RestController
 public class MyRestController {
@@ -30,21 +34,23 @@ public class MyRestController {
     private IMyService myService;
 
     @PostMapping("/deploy")
-    public String deployBPMN(){
-        return myService.deploymentBpmn20("one-task-process.bpmn20.xml");
+    public String deployBPMN(String bpmnName){
+        return myService.deploymentBpmn20(bpmnName+".bpmn20.xml");
     }
 
     @PostMapping("/process")
     public void startProcessInstance(@RequestParam("assignee") String assignee){
-        myService.startProcess("oneTaskProcess",assignee);
+        List<MyProcess> allDeployProcess = myService.getAllDeployProcess();
+        //获取最新部署的流程 开始流程
+        MyProcess myProcess = allDeployProcess.get(0);
+        myService.startProcess(myProcess.getProcessKey(),assignee);
     }
-
 
     /**
      * TODO 文档暂未提供,但方法提供
      * @param processId
      */
-    @DeleteMapping("delProcess")
+    @DeleteMapping("/delProcess")
     public void deleteProcessInstance(@RequestParam String processId){
         myService.deleteProcessInstance(processId,"test delete");
     }

@@ -1,5 +1,6 @@
 package com.example.flowablejpademo.service;
 
+import com.example.flowablejpademo.bean.MyProcess;
 import org.flowable.task.api.Task;
 
 import java.util.List;
@@ -15,7 +16,6 @@ public interface IMyService
 
     public List<Task> getTasks(String assignee);
 
-    public void createDemoUsers();
-
+    public List<MyProcess> getAllDeployProcess();
 
 }

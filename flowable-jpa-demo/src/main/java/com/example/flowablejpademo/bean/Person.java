@@ -1,13 +1,11 @@
 package com.example.flowablejpademo.bean;
 
-import org.hibernate.annotations.Entity;
-import org.springframework.context.annotation.Bean;
-
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
-@javax.persistence.Entity
+@Entity
 public class Person {
 
     @Id

@@ -1,4 +1,4 @@
-package com.example.flowablejpademo.dao;
+package com.example.flowablejpademo.repository;
 
 import com.example.flowablejpademo.bean.Person;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,13 @@
 package com.example.flowablejpademo;
 
 import com.example.flowablejpademo.service.IMyService;
+import com.example.flowablejpademo.service.impl.MyServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  *
@@ -14,7 +17,7 @@ import org.springframework.context.annotation.Bean;
  * 2.开始一个流程.指定受理人参数
  * curl -X POST  http://localhost:8080/process?assignee=jbarrez
  * 更改assignee name:
- * @see com.example.flowablejpademo.service.MyServiceImpl#createDemoUsers})
+ * @see MyServiceImpl#createDemoUsers})
  * 3.查看person.id为1的人员的tasks
  * curl http://localhost:8080/tasks?assignee=1
  *
@@ -24,6 +27,8 @@ import org.springframework.context.annotation.Bean;
  *
  * 查看actuator端点信息 curl http://localhost:8080/actuator/flowable
  */
+@EnableJpaRepositories
+@EnableTransactionManagement
 @SpringBootApplication(proxyBeanMethods = false)
 public class FlowableJpaDemoApplication {
 
@@ -31,14 +36,14 @@ public class FlowableJpaDemoApplication {
         SpringApplication.run(FlowableJpaDemoApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner init(final IMyService myService) {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... strings) throws Exception {
-                System.out.println("start createDemoUsers");
-                myService.createDemoUsers();
-            }
-        };
-    }
+//    @Bean
+//    public CommandLineRunner init(final IMyService myService) {
+//        return new CommandLineRunner() {
+//            @Override
+//            public void run(String... strings) throws Exception {
+//                System.out.println("start createDemoUsers");
+//                myService.createDemoUsers();
+//            }
+//        };
+//    }
 }

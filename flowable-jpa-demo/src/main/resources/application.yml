@@ -1,7 +1,13 @@
 spring:
+  datasource:
+    hikari:
+      connection-timeout: 10000
+      maximum-pool-size: 10
+      minimum-idle: 15
+      pool-name: HikariConnectionPool
   jpa:
     hibernate:
-      ddl-auto: create-drop #create and drop schema
+      ddl-auto: update
       #    可选参数
       #    create 启动时删数据库中的表，然后创建，退出时不删除数据表
       #    create-drop 启动时删数据库中的表，然后创建，退出时删除数据表 如果表不存在报错
@@ -20,3 +26,5 @@ management:
     web:
       exposure:
         include: '*'
+server:
+  port: 9090
