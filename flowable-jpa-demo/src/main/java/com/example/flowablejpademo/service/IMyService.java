@@ -7,15 +7,13 @@ import java.util.List;
 
 public interface IMyService
 {
-
     public String deploymentBpmn20(String xmlFileName);
 
-    public void startProcess(String processKey,String assignee);
+    public String startProcess(String processKey,String username);
 
     public void deleteProcessInstance(String processId, String deleteReason);
 
-    public List<Task> getTasks(String assignee);
+    public List<Task> getTasks(String username);
 
     public List<MyProcess> getAllDeployProcess();
-
 }

@@ -1,7 +1,5 @@
 package com.example.flowablejpademo.bean;
 
-import org.springframework.context.annotation.Bean;
-
 public class TaskRepresentation {
     private String id;
     private String name;

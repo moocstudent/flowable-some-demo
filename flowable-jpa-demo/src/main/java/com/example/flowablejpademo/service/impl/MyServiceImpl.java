@@ -10,7 +10,10 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
+import org.hibernate.dialect.pagination.LimitHelper;
+import org.hibernate.engine.spi.RowSelection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author ukyo
@@ -71,7 +75,8 @@ public class MyServiceImpl implements IMyService {
         String processId = processDefinition.getId();
         System.out.println("Process Id is:"+processId);
         MyProcess mp = new MyProcess(processId,processName,processKey);
-        myProcessRepository.save(mp);
+        MyProcess save = myProcessRepository.save(mp);
+        System.out.println("my process saved:"+save);
         return processKey;
     }
 
@@ -79,12 +84,14 @@ public class MyServiceImpl implements IMyService {
      * 开始流程实例 传入流程参数key value
      */
     @Override
-    public void startProcess(String processKey,String assignee) {
-        Person person = personRepository.findByUsername(assignee);
-        System.out.println("get person:"+person.toString());
+    public String startProcess(String processKey,String username) {
+        List<Person> person = personRepository.findByUsername(username);
+        System.out.println("person:"+person);
         HashMap<String, Object> variables = new HashMap<>();
-        variables.put("person",person);
-        runtimeService.startProcessInstanceByKey(processKey,variables);
+        variables.put("person",person.get(0));
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, variables);
+        String processDefinitionId = processInstance.getProcessDefinitionId();
+        return processDefinitionId;
     }
 
     /**
@@ -98,15 +105,14 @@ public class MyServiceImpl implements IMyService {
         runtimeService.deleteProcessInstance(processId,deleteReason);
     }
 
-
     /**
      * 受理方获取任务list
-     * @param assignee
+     * @param username
      * @return
      */
     @Override
-    public List<Task> getTasks(String assignee) {
-        return taskService.createTaskQuery().taskAssignee(assignee).list();
+    public List<Task> getTasks(String username) {
+        return taskService.createTaskQuery().taskAssignee(username).list();
     }
 
     @Override

@@ -1,16 +1,16 @@
 package com.example.flowablejpademo.bean;
 
+import lombok.Builder;
+import lombok.ToString;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-public class Person {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+@Builder
+@ToString(callSuper = true)
+public class Person extends BaseEntity implements Serializable {
 
     private String username;
 
@@ -29,12 +29,12 @@ public class Person {
         this.birthDate = birthDate;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Person(Long id, Date createTime, Date updateTime, String username, String firstName, String lastName, Date birthDate) {
+        super(id, createTime, updateTime);
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
     }
 
     public String getUsername() {

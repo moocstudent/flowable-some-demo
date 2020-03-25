@@ -5,30 +5,22 @@ import com.example.flowablejpademo.bean.TaskRepresentation;
 import com.example.flowablejpademo.service.IMyService;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ukyo
  * 按照flowable官网文档建立控制层
  * 比文档多一个deploy方法(如果部署不同的bpmn2.0文件请更换方法内名称或配置到properties Value读取)
  *
- * 测试查看启动boot main
- * 1.部署流程实例
- * curl http://localhost:9090/deploy?bpmnName=one-task-process -X POST
- * 2.开始一个流程.指定受理人参数
- * curl -X POST  http://localhost:9090/process?assignee=jbarrez
- * 3.查看person.id为1的人员的tasks
- * curl http://localhost:9090/tasks?assignee=1
- * 4.部署另一个实例
- * curl http://localhost:9090/deploy?bpmnName=test -X POST
- * 5.开始另一个流程 admin
- * curl -X POST  http://localhost:9090/process?assignee=admin
  */
 @RestController
-public class MyRestController {
+public class MyFlowableController {
 
     @Autowired
     private IMyService myService;
@@ -39,11 +31,23 @@ public class MyRestController {
     }
 
     @PostMapping("/process")
-    public void startProcessInstance(@RequestParam("assignee") String assignee){
-        List<MyProcess> allDeployProcess = myService.getAllDeployProcess();
-        //获取最新部署的流程 开始流程
-        MyProcess myProcess = allDeployProcess.get(0);
-        myService.startProcess(myProcess.getProcessKey(),assignee);
+    public Map<String,Object> startProcessInstance(String processKey,String assignee){
+        Map<String,Object> result = new HashMap<>();
+        if(StringUtils.isEmpty(processKey)||StringUtils.isEmpty(assignee)){
+            result.put("success",0);
+            result.put("msg","processKey & assignee can't be null.");
+            return result;
+        }
+        String processDefinitionId = myService.startProcess(processKey, assignee);
+        if(!StringUtils.isEmpty(processDefinitionId)){
+            result.put("success",1);
+            result.put("msg","start process instance "+processKey+" ok.The assignee username is "+assignee);
+            return result;
+        }else{
+            result.put("success",0);
+            result.put("msg","start process instance "+processKey+" failed.Please checkout your variables and try again.");
+            return result;
+        }
     }
 
     /**

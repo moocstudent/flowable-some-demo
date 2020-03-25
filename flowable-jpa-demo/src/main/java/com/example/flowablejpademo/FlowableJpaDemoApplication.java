@@ -12,14 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  *
  * 测试查看启动boot main
- * 1.部署流程实例
- * curl http://localhost:8080/deploy -X POST
- * 2.开始一个流程.指定受理人参数
- * curl -X POST  http://localhost:8080/process?assignee=jbarrez
- * 更改assignee name:
- * @see MyServiceImpl#createDemoUsers})
- * 3.查看person.id为1的人员的tasks
- * curl http://localhost:8080/tasks?assignee=1
  *
  * bpmn20.xml中:
  *  <userTask id="theTask" name="my task" flowable:assignee="${person.id}"/>
